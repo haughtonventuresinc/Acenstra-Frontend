@@ -13,6 +13,8 @@ interface AuthState {
 interface AuthContextType extends AuthState {
   login: (credentials: authService.LoginCredentials) => Promise<void>;
   logout: () => void;
+  token: string | null;
+  fetchUserProfile?: () => Promise<void>;
   // clearError: () => void; // Optional: if you want to manually clear errors
 }
 
@@ -34,42 +36,51 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   });
 
+  // Fetch user profile function (must be defined outside useEffect)
+  const fetchUserProfile = React.useCallback(async () => {
+    if (authState.token) {
+      setAuthState(prev => ({ ...prev, isLoading: true }));
+      try {
+        const profile = await authService.getProfile();
+        setAuthState(prev => ({ ...prev, user: profile, isAuthenticated: true, isLoading: false }));
+      } catch (err) {
+        console.error('Failed to fetch profile:', err);
+        // Token might be invalid/expired, so log out
+        authService.logout();
+        setAuthState({
+          token: null,
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          error: 'Session expired. Please login again.',
+        });
+      }
+    }
+  }, [authState.token]);
+
   // Optional: Fetch user profile if token exists on initial load
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (authState.token && !authState.user) {
-        setAuthState(prev => ({ ...prev, isLoading: true }));
-        try {
-          const profile = await authService.getProfile();
-          setAuthState(prev => ({ ...prev, user: profile, isAuthenticated: true, isLoading: false }));
-        } catch (err) {
-          console.error('Failed to fetch profile on load:', err);
-          // Token might be invalid/expired, so log out
-          authService.logout(); // This will clear token from LS and auth headers
-          setAuthState({
-            token: null,
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: 'Session expired. Please login again.',
-          });
-        }
-      }
-    };
-    fetchUserProfile();
-  }, [authState.token, authState.user]); // Re-run if token or user changes
+    if (authState.token && !authState.user) {
+      fetchUserProfile();
+    }
+  }, [authState.token, authState.user, fetchUserProfile]); // Add fetchUserProfile to deps
 
   const login = async (credentials: authService.LoginCredentials) => {
+    const response = await authService.login(credentials);
+    // After login, fetch user profile and update state
+    await fetchUserProfile();
+
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const loginResponse = await authService.login(credentials);
+      // No need to call login again, we already have the response
+      // const loginResponse = await authService.login(credentials);
       // After successful login, authService.login already sets the token in localStorage and apiClient headers.
       // It also fetches the profile in the useEffect above when authState.token changes.
       // So we just need to update the state here based on the login response.
       // The useEffect will handle fetching the profile.
       setAuthState(prev => ({
         ...prev, // Keep existing user and error state for a moment
-        token: loginResponse.access_token,
+        token: response.token,
         isAuthenticated: true, // Optimistically set isAuthenticated
         isLoading: true, // We will be loading profile in useEffect
         error: null, 
@@ -115,7 +126,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout /*, clearError */ }}>
+    <AuthContext.Provider value={{ user: authState.user, isAuthenticated: authState.isAuthenticated, login, logout, isLoading: authState.isLoading, error: authState.error, token: authState.token, fetchUserProfile }}>
       {children}
     </AuthContext.Provider>
   );

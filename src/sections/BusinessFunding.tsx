@@ -1,7 +1,9 @@
 import { Button } from '../components/Button';
 import { DollarSign, BadgeCheck, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function BusinessFunding() {
+  const navigate = useNavigate();
   return (
     <section id="business-funding" className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -39,7 +41,7 @@ export function BusinessFunding() {
         </div>
 
         <div className="text-center">
-          <Button size="lg">APPLY FOR FUNDING</Button>
+          <Button size="lg" onClick={() => navigate('/apply-funding')}>APPLY FOR FUNDING</Button>
         </div>
       </div>
     </section>

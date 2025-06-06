@@ -7,12 +7,13 @@ import { Features } from './sections/Features';
 import { Results } from './sections/Results';
 import { Testimonials } from './sections/Testimonials';
 import { FAQs } from './sections/FAQs';
-import { Footer } from './sections/Footer';
+
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage'; // Added
 import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage'; // Added
+import ApplyFundingPage from './pages/ApplyFundingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 
@@ -48,6 +49,7 @@ function App() {
           </Route>
 
           {/* Public Route for the landing page */}
+          <Route path="/apply-funding" element={<ApplyFundingPage />} />
           <Route 
             path="/"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPageContent />}
@@ -57,7 +59,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 }

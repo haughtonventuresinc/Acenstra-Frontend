@@ -1,6 +1,8 @@
 import { Button } from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 export function Hero() {
+  const navigate = useNavigate();
   return (
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-40">
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -31,6 +33,13 @@ export function Hero() {
               onClick={() => document.getElementById('testimonials')?.scrollIntoView()}
             >
               SEE SUCCESS STORIES
+            </Button>
+            <Button
+              size="lg"
+              className="transform hover:scale-105 transition-transform font-bold bg-blue-600 text-white uppercase"
+              onClick={() => navigate('/apply-funding')}
+            >
+              APPLY FOR FUNDING
             </Button>
           </div>
         </div>

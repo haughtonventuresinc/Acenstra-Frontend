@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'; // Using Vite's env variable
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Point to backend
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -19,27 +19,45 @@ export const setAuthToken = (token: string | null) => {
 };
 
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface LoginResponse {
-  access_token: string;
+  token: string;
 }
 
 export interface UserProfile {
-  userId: number;
-  username: string;
-  // Add other fields that your /auth/profile endpoint might return
+  email: string;
+  // Add other fields if needed
 }
 
 export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
-  const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
-  if (response.data.access_token) {
-    localStorage.setItem('token', response.data.access_token); // Store token in localStorage
-    setAuthToken(response.data.access_token);
+  const response = await apiClient.post<LoginResponse>('/api/login', credentials);
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+    setAuthToken(response.data.token);
   }
   return response.data;
+};
+
+export interface RegisterCredentials {
+  email: string;
+  password: string;
+}
+
+export const register = async (credentials: RegisterCredentials): Promise<void> => {
+  await apiClient.post('/api/register', credentials);
+};
+
+export const forgotPassword = async (email: string): Promise<string> => {
+  const response = await apiClient.post('/api/forgot-password', { email });
+  return response.data.message;
+};
+
+export const userExists = async (email: string): Promise<boolean> => {
+  const response = await apiClient.post('/api/user-exists', { email });
+  return response.data.exists;
 };
 
 export const logout = () => {
@@ -54,7 +72,7 @@ export const getProfile = async (): Promise<UserProfile> => {
   if (token && !apiClient.defaults.headers.common['Authorization']) {
     setAuthToken(token);
   }
-  const response = await apiClient.get<UserProfile>('/auth/profile');
+  const response = await apiClient.get<UserProfile>('/api/protected'); // backend protected endpoint
   return response.data;
 };
 
@@ -64,4 +82,14 @@ if (initialToken) {
   setAuthToken(initialToken);
 }
 
-export default apiClient;
+export const getCurrentUser = async (): Promise<{ email: string }> => {
+  const response = await apiClient.get('/api/me');
+  return response.data;
+};
+
+export default {
+  login,
+  register,
+  logout,
+  getCurrentUser,
+};

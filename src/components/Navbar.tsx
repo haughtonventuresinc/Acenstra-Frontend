@@ -40,6 +40,26 @@ export function Navbar() {
     { label: 'TESTIMONIALS', hash: '#testimonials' },
   ];
 
+  // Detect if on dashboard route
+  const isDashboard = location.pathname.startsWith('/dashboard');
+
+  if (isDashboard) {
+    return (
+      <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-r border-blue-100 shadow-lg z-50 flex flex-col font-sans">
+        <div className="flex items-center gap-2 h-20 px-6 text-2xl font-extrabold tracking-tight text-blue-800 uppercase border-b border-blue-100">
+          <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 mr-2 shadow-md"></span>
+          ACENSTRA
+        </div>
+        <nav className="flex-1 flex flex-col gap-1 px-4 mt-6">
+          <Link to="/dashboard" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname === '/dashboard' ? 'bg-blue-100 text-blue-900' : ''}`}>🏠 Dashboard Home</Link>
+          <Link to="/dashboard/profile" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname === '/dashboard/profile' ? 'bg-blue-100 text-blue-900' : ''}`}>👤 My Profile</Link>
+          <Link to="/dashboard/applications" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname.startsWith('/dashboard/applications') ? 'bg-blue-100 text-blue-900' : ''}`}>📄 My Applications</Link>
+          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 mt-8 rounded-lg font-semibold text-red-700 hover:bg-red-50 transition"><LogOut size={18}/> Logout</button>
+        </nav>
+      </aside>
+    );
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/60 backdrop-blur-lg shadow-lg z-50 border-b border-blue-100">
       <div className="container mx-auto px-4">
@@ -51,33 +71,16 @@ export function Navbar() {
 
           {/* Desktop Navigation - Left side (existing items) */}
           <div className="hidden md:flex items-center space-x-10">
-            {navItems.map((item) =>
-              item.to ? (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  className="uppercase tracking-wide text-sm text-gray-700 font-semibold px-2 py-1 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-150"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a
-                  key={item.label}
-                  href={item.hash}
-                  onClick={e => handleSectionNav(e, item.hash!)}
-                  className="uppercase tracking-wide text-sm text-gray-700 font-semibold px-2 py-1 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-150 cursor-pointer"
-                >
-                  {item.label}
-                </a>
-              )
-            )} 
-            {/* GET STARTED button or other CTAs can remain here or be conditional */}
-            <a 
-              href="#pricing" 
-              className="ml-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full shadow hover:from-blue-700 hover:to-purple-700 transition-all font-bold tracking-wide text-sm uppercase"
-            >
-              Get Started
-            </a>
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.hash}
+                onClick={e => handleSectionNav(e, item.hash!)}
+                className="uppercase tracking-wide text-sm text-gray-700 font-semibold px-2 py-1 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-150 cursor-pointer"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
 
           {/* Desktop Navigation - Right side (Auth links) */}
@@ -85,7 +88,7 @@ export function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 hover:text-blue-900 transition-all">
-                  <UserCircle size={18} /> Dashboard {user?.username ? `(${user.username})` : ''}
+                  <UserCircle size={18} /> Dashboard {user?.email ? `(${user.email})` : '(User)'}
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -134,7 +137,7 @@ export function Navbar() {
             {navItems.map((item) => (
               <a 
                 key={item.label}
-                href={item.href}
+                href={item.hash}
                 onClick={() => setIsOpen(false)}
                 className="block py-3 px-4 text-base text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
               >
@@ -158,7 +161,7 @@ export function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center py-3 px-4 text-base text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                   >
-                    <UserCircle size={20} className="mr-2" /> Dashboard {user?.username ? `(${user.username})` : ''}
+                    <UserCircle size={20} className="mr-2" /> Dashboard {user?.email ? `(${user.email})` : ''}
                   </Link>
                   <button
                     onClick={handleLogout} // handleLogout already calls setIsOpen(false)
