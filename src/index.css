@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+    linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.pricing-card {
+  @apply relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] hover:border-blue-100;
+}
+
+.feature-card {
+  @apply flex flex-col items-center p-8 text-center rounded-2xl bg-white shadow-md hover:shadow-xl transition-all hover:scale-[1.02];
+}
+
+.testimonial-card {
+  @apply bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all hover:scale-[1.02];
+}
+
+.result-card {
+  @apply bg-white p-8 rounded-2xl shadow-md text-center hover:shadow-xl transition-all hover:scale-[1.02];
+}
+
+.faq-item {
+  @apply border-b border-gray-200 py-8 last:border-none;
+}
