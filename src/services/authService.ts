@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Point to backend
+const API_URL = import.meta.env.VITE_API_URL || 'https://acenstra-backend-production.up.railway.app'; // Point to backend
 
 const apiClient = axios.create({
   baseURL: API_URL,
