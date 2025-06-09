@@ -24,7 +24,7 @@ export function Hero() {
               size="lg" 
               variant="primary" // Explicitly primary
               className="transform hover:scale-105 transition-transform font-bold uppercase"
-              onClick={() => document.getElementById('pricing')?.scrollIntoView()}
+              onClick={() => document.getElementById('tutorial')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Rocket size={20} className="mr-2" /> GET STARTED NOW
             </Button>

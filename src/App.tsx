@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './sections/Hero';
+import { VideoTutorialSection } from './sections/VideoTutorialSection';
 import { CreditRepairPlans } from './sections/CreditRepairPlans';
 import { BusinessFunding } from './sections/BusinessFunding';
 import { Features } from './sections/Features';
@@ -21,6 +22,7 @@ import { useAuth } from './context/AuthContext';
 const LandingPageContent = () => (
   <>
     <Hero />
+    <VideoTutorialSection />
     <CreditRepairPlans />
     <BusinessFunding />
     <Features />
