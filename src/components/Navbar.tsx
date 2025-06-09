@@ -61,7 +61,7 @@ export function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/60 backdrop-blur-lg shadow-lg z-50 border-b border-blue-100">
+    <nav className="fixed top-0 left-0 right-0 bg-white/60 backdrop-blur-lg shadow-lg border-b border-blue-100" style={{zIndex: 999}}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-2 text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-blue-500 to-purple-600 bg-clip-text text-transparent drop-shadow-sm uppercase">
