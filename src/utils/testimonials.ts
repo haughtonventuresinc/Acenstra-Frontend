@@ -17,4 +17,10 @@ export const testimonials = [
     text: 'The DIY plan was perfect for me. Their guidance helped me understand credit repair and take control of my financial future.',
     rating: 4,
   },
+  {
+    name: 'David Lee',
+    image: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg',
+    text: 'Their team was responsive and knowledgeable. They explained everything clearly and got results faster than I expected. Highly recommend!',
+    rating: 5,
+  },
 ];

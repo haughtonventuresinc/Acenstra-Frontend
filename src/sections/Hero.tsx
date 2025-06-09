@@ -1,5 +1,6 @@
 import { Button } from '../components/Button';
 import { useNavigate } from 'react-router-dom';
+import { Rocket, Users, FileText } from 'lucide-react';
 
 export function Hero() {
   const navigate = useNavigate();
@@ -21,10 +22,11 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="transform hover:scale-105 transition-transform"
+              variant="primary" // Explicitly primary
+              className="transform hover:scale-105 transition-transform font-bold uppercase"
               onClick={() => document.getElementById('pricing')?.scrollIntoView()}
             >
-              GET STARTED NOW
+              <Rocket size={20} className="mr-2" /> GET STARTED NOW
             </Button>
             <Button 
               size="lg" 
@@ -32,14 +34,15 @@ export function Hero() {
               className="transform hover:scale-105 transition-transform"
               onClick={() => document.getElementById('testimonials')?.scrollIntoView()}
             >
-              SEE SUCCESS STORIES
+              <Users size={20} className="mr-2" /> SEE SUCCESS STORIES
             </Button>
             <Button
               size="lg"
-              className="transform hover:scale-105 transition-transform font-bold bg-blue-600 text-white uppercase"
+              variant="primary" // Use primary variant prop
+              className="transform hover:scale-105 transition-transform font-bold uppercase" // Keep font-bold and uppercase if desired on top of variant
               onClick={() => navigate('/apply-funding')}
             >
-              APPLY FOR FUNDING
+              <FileText size={20} className="mr-2" /> APPLY FOR FUNDING
             </Button>
           </div>
         </div>

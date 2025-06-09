@@ -6,6 +6,8 @@ interface PricingCardProps {
   popular?: boolean;
 }
 
+import PayPalButton from './PayPalButton';
+
 export function PricingCard({
   title,
   price,
@@ -45,9 +47,14 @@ export function PricingCard({
           </li>
         ))}
       </ul>
-      <button className="mt-8 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
-        GET STARTED
-      </button>
+      <div className="mt-8 flex justify-center">
+        <PayPalButton
+          amount={price.replace(/[^\d.]/g, '')}
+          onSuccess={() => alert('Payment successful!')}
+          onError={() => alert('Payment failed. Please try again.')}
+          className="w-full max-w-xs" // Ensure consistent width
+        />
+      </div>
     </div>
   );
 }

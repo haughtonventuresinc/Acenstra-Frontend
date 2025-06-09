@@ -1,0 +1,28 @@
+/* src/sections/Testimonials.css */
+.testimonial-carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 1rem; /* Add some space if cards have shadow that might get clipped */
+  padding-bottom: 1rem;
+}
+
+.testimonial-scroll-content {
+  display: flex;
+  gap: 2rem; /* Corresponds to Tailwind's gap-8 (32px) */
+  width: max-content; /* Allow content to determine its own width */
+  animation: scrollHorizontalAnimation 40s linear infinite;
+}
+
+.testimonial-scroll-content:hover {
+  animation-play-state: paused; /* Optional: Pause on hover */
+}
+
+@keyframes scrollHorizontalAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--scroll-width)));
+  }
+}

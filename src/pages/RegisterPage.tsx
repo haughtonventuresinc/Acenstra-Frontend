@@ -43,7 +43,7 @@ setError((err as ErrorWithResponse).response.data.error);
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100 font-sans">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-12 flex flex-col items-center">
         <div>
           <h2 className="text-center text-2xl font-semibold text-blue-800 mb-6 tracking-tight">
             Create your <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Acenstra</span> account
@@ -67,7 +67,7 @@ setError((err as ErrorWithResponse).response.data.error);
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base"
+                  className="block w-full pl-10 px-4 py-4 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-lg"
                   placeholder="Email"
                 />
               </div>
@@ -88,7 +88,7 @@ setError((err as ErrorWithResponse).response.data.error);
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 px-4 py-3 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base"
+                  className="block w-full pl-10 pr-10 px-4 py-4 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-lg"
                   placeholder="Password"
                 />
                 <button
@@ -122,7 +122,7 @@ setError((err as ErrorWithResponse).response.data.error);
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 px-4 py-3 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base"
+                  className="block w-full pl-10 pr-10 px-4 py-4 border border-gray-300 rounded-lg text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-lg"
                   placeholder="Confirm Password"
                 />
                 <button

@@ -1,5 +1,5 @@
 import { Button } from '../components/Button';
-import { DollarSign, BadgeCheck, Clock } from 'lucide-react';
+import { DollarSign, BadgeCheck, Clock, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function BusinessFunding() {
@@ -41,7 +41,14 @@ export function BusinessFunding() {
         </div>
 
         <div className="text-center">
-          <Button size="lg" onClick={() => navigate('/apply-funding')}>APPLY FOR FUNDING</Button>
+          <Button 
+            size="lg" 
+            variant="primary" 
+            className="font-bold uppercase transform hover:scale-105 transition-transform" 
+            onClick={() => navigate('/apply-funding')}
+          >
+            <FileText size={20} className="mr-2" /> APPLY FOR FUNDING
+          </Button>
         </div>
       </div>
     </section>

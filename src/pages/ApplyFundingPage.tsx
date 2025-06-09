@@ -25,7 +25,7 @@ const initialForm: FundingFormData = {
 };
 
 const ApplyFundingPage: React.FC = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useAuth(); // user might be null initially
   const navigate = useNavigate();
   const [form, setForm] = useState<FundingFormData>({
     ...initialForm,
@@ -34,6 +34,31 @@ const ApplyFundingPage: React.FC = () => {
   const [step, setStep] = useState<'form' | 'prompt' | 'thanks'>('form');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (isAuthenticated && user) { // Ensure user object is available for email
+      const pendingDataJSON = sessionStorage.getItem('pendingFundingApplication');
+      const pendingAction = sessionStorage.getItem('pendingFundingApplicationAction');
+
+      if (pendingDataJSON && pendingAction === 'submit') {
+        try {
+          const pendingData = JSON.parse(pendingDataJSON);
+          setForm(() => ({
+            ...initialForm, // Reset to clear any old file object
+            ...pendingData, // Apply saved text data
+            email: user.email || pendingData.email, // Prioritize current authenticated user's email
+            creditReport: null, // File needs to be re-selected
+          }));
+          setError("Welcome back! Your information has been restored. Please re-select your credit report file and click 'Submit Application'.");
+        } catch (e) {
+          console.error("Error parsing pending application data from sessionStorage:", e);
+          setError("There was an issue restoring your form data. Please fill it out again.");
+        }
+        sessionStorage.removeItem('pendingFundingApplication');
+        sessionStorage.removeItem('pendingFundingApplicationAction');
+      }
+    }
+  }, [isAuthenticated, user]); // Rerun when auth state or user info changes
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement | HTMLSelectElement;
@@ -49,6 +74,10 @@ const ApplyFundingPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     if (!isAuthenticated) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { creditReport, ...formDataToSave } = form; // Exclude file object
+      sessionStorage.setItem('pendingFundingApplication', JSON.stringify(formDataToSave));
+      sessionStorage.setItem('pendingFundingApplicationAction', 'submit'); // Mark that a submission was intended
       setStep('prompt');
       return;
     }

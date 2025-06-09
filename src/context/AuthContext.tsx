@@ -72,12 +72,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      // No need to call login again, we already have the response
-      // const loginResponse = await authService.login(credentials);
-      // After successful login, authService.login already sets the token in localStorage and apiClient headers.
-      // It also fetches the profile in the useEffect above when authState.token changes.
-      // So we just need to update the state here based on the login response.
-      // The useEffect will handle fetching the profile.
       setAuthState(prev => ({
         ...prev, // Keep existing user and error state for a moment
         token: response.token,

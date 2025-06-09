@@ -1,5 +1,6 @@
 import { TestimonialCard } from '../components/TestimonialCard';
 import { testimonials } from '../utils/testimonials';
+import './Testimonials.css'; // Import the new CSS file
 
 export function Testimonials() {
   return (
@@ -14,12 +15,19 @@ export function Testimonials() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard key={testimonial.name} {...testimonial} />
+        {/* Infinite Scroll Container */}
+        <div className="testimonial-carousel-container">
+          <div 
+            className="testimonial-scroll-content" 
+            style={{ '--scroll-width': `${testimonials.length * (384 + 32)}px` } as React.CSSProperties}
+          >
+          {/* Render testimonials twice for seamless loop */}
+          {[...testimonials, ...testimonials].map((testimonial, index) => (
+            <TestimonialCard key={`${testimonial.name}-${index}`} {...testimonial} />
           ))}
         </div>
-      </div>
+      </div> {/* Closes testimonial-carousel-container */}
+      </div> {/* Closes container mx-auto px-4 */}
     </section>
   );
 }

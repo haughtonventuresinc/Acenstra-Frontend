@@ -19,7 +19,7 @@
 }
 
 .pricing-card {
-  @apply relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] hover:border-blue-100;
+  @apply relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-12 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] hover:border-blue-100;
 }
 
 .feature-card {

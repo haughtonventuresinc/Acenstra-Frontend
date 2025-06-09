@@ -7,7 +7,7 @@ interface TestimonialCardProps {
 
 export function TestimonialCard({ name, image, text, rating }: TestimonialCardProps) {
   return (
-    <div className="testimonial-card">
+    <div className="testimonial-card bg-white p-6 rounded-lg shadow-lg flex-shrink-0 w-96">
       <div className="flex items-center mb-4">
         <img
           src={image}

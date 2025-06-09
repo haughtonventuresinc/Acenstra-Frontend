@@ -51,9 +51,9 @@ export function Navbar() {
           ACENSTRA
         </div>
         <nav className="flex-1 flex flex-col gap-1 px-4 mt-6">
-          <Link to="/dashboard" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname === '/dashboard' ? 'bg-blue-100 text-blue-900' : ''}`}>🏠 Dashboard Home</Link>
-          <Link to="/dashboard/profile" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname === '/dashboard/profile' ? 'bg-blue-100 text-blue-900' : ''}`}>👤 My Profile</Link>
-          <Link to="/dashboard/applications" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.pathname.startsWith('/dashboard/applications') ? 'bg-blue-100 text-blue-900' : ''}`}>📄 My Applications</Link>
+          <Link to="/dashboard?section=profile" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.search === '?section=profile' ? 'bg-blue-100 text-blue-900' : ''}`}>👤 My Profile</Link>
+          <Link to="/dashboard?section=applications" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.search === '?section=applications' ? 'bg-blue-100 text-blue-900' : ''}`}>📄 My Applications</Link>
+          <Link to="/dashboard?section=ai_analyzer" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-blue-700 hover:bg-blue-50 transition ${location.search === '?section=ai_analyzer' ? 'bg-blue-100 text-blue-900' : ''}`}>✨ AI Analyzer</Link>
           <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 mt-8 rounded-lg font-semibold text-red-700 hover:bg-red-50 transition"><LogOut size={18}/> Logout</button>
         </nav>
       </aside>

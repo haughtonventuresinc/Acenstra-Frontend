@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://acenstra-backend-production.up.railway.app'; // Point to backend
+//const API_URL = 'http://localhost:5000';  
+
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -28,7 +30,7 @@ export interface LoginResponse {
 }
 
 export interface UserProfile {
-  email: string;
+    email: string;
   // Add other fields if needed
 }
 
@@ -72,7 +74,7 @@ export const getProfile = async (): Promise<UserProfile> => {
   if (token && !apiClient.defaults.headers.common['Authorization']) {
     setAuthToken(token);
   }
-  const response = await apiClient.get<UserProfile>('/api/protected'); // backend protected endpoint
+  const response = await apiClient.get<UserProfile>('/api/me'); // backend protected endpoint
   return response.data;
 };
 
@@ -87,9 +89,22 @@ export const getCurrentUser = async (): Promise<{ email: string }> => {
   return response.data;
 };
 
+export const analyzeCreditReport = async (creditReportText: string): Promise<{ analysis: string }> => {
+  // Ensure token is set if not already (e.g., after page refresh)
+  const token = localStorage.getItem('token');
+  if (token && !apiClient.defaults.headers.common['Authorization']) {
+    setAuthToken(token);
+  }
+  const response = await apiClient.post<{ analysis: string }>('/api/ai/analyze-credit-report', {
+    creditReportText,
+  });
+  return response.data;
+};
+
 export default {
   login,
   register,
   logout,
   getCurrentUser,
+  // Note: analyzeCreditReport is a named export, not added to default
 };

@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
+import { useNavigate, Link, useLocation } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext';
 
 
@@ -9,6 +9,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const { login, isLoading, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -23,14 +24,14 @@ const LoginPage: React.FC = () => {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      // Redirect to profile or dashboard. We'll eventually change this to /dashboard
-      navigate('/dashboard', { replace: true }); 
+      const from = location.state?.from || '/dashboard';
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location.state]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 font-sans" style={{ minHeight: '100vh' }}>
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-12 flex flex-col items-center">
         <div>
           <h2 className="text-center text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
             Sign in to <span className="bg-gradient-to-r from-brand to-brand-dark bg-clip-text text-transparent">Acenstra</span>
@@ -55,7 +56,7 @@ const LoginPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base"
+                  className="block w-full pl-10 px-4 py-4 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-lg"
                   placeholder="Email"
                 />
               </div>
@@ -76,7 +77,7 @@ const LoginPage: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base"
+                  className="block w-full pl-10 pr-10 px-4 py-4 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-lg"
                   placeholder="Password"
                 />
                 <button
