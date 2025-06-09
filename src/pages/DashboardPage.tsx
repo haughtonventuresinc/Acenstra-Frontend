@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
-import { Sparkles, Upload } from 'lucide-react';
+import { Sparkles, FileText, AlertCircle } from 'lucide-react';
 import { analyzeCreditReport } from '../services/authService'; // Import the analyzeCreditReport function
 import { AxiosError } from 'axios'; // Import AxiosError for specific error handling
+import CreditAnalysisResult from '../components/CreditAnalysisResult'; // Import the new component
 
 const DashboardPage: React.FC = () => {
   const [creditReportText, setCreditReportText] = useState('');
@@ -83,58 +84,96 @@ const DashboardPage: React.FC = () => {
           <div className="bg-white rounded-3xl shadow-xl p-8 mt-8 border border-blue-100">
             <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">Credit Report Analyzer</h2>
             
-            {/* Hidden file input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              className="hidden"
-              accept=".txt,.pdf,.doc,.docx"
-            />
-            
-            {/* Upload button */}
-            <div className="mb-4">
-              <button
-                onClick={handleUploadClick}
-                disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-md disabled:opacity-50"
-              >
-                <Upload size={20} className="mr-2" /> Upload Credit Report
-              </button>
-              {fileName && (
-                <p className="mt-2 text-sm text-gray-600 text-center">
-                  Uploaded: {fileName}
-                </p>
-              )}
-            </div>
-            
-            <textarea
-              className="w-full h-40 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm"
-              placeholder="Or paste your credit report text here..."
-              value={creditReportText}
-              onChange={(e) => setCreditReportText(e.target.value)}
-              disabled={isLoading}
-            />
-            <button
-              onClick={handleAnalyzeReport}
-              disabled={isLoading}
-              className="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all shadow-md disabled:opacity-50"
-            >
-              <Sparkles size={20} className="mr-2" /> {isLoading ? 'Analyzing...' : 'Analyze Report'}
-            </button>
-
-            {error && (
-              <div className="mt-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg text-sm">
-                {error}
+            {!analysisResult ? (
+              <div className="space-y-6">
+                {/* Step 1: Upload Section */}
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                  <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+                    <span className="bg-blue-700 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2 text-sm">1</span>
+                    Upload Your Credit Report
+                  </h3>
+                  
+                  {/* Hidden file input */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    accept=".txt,.pdf,.doc,.docx"
+                  />
+                  
+                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-blue-300 rounded-lg bg-white cursor-pointer hover:bg-blue-50 transition-colors" onClick={handleUploadClick}>
+                    <FileText size={48} className="text-blue-500 mb-3" />
+                    <p className="text-blue-700 font-medium mb-1">Click to upload your credit report</p>
+                    <p className="text-sm text-gray-500">Accepts TXT, PDF, DOC, DOCX files</p>
+                  </div>
+                  
+                  {fileName && (
+                    <div className="mt-3 p-3 bg-blue-100 rounded-lg flex items-center">
+                      <FileText size={20} className="text-blue-700 mr-2" />
+                      <span className="text-blue-800 font-medium">{fileName}</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Step 2: Paste Section */}
+                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                    <span className="bg-gray-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center mr-2 text-sm">2</span>
+                    Or Paste Your Credit Report Text
+                  </h3>
+                  
+                  <textarea
+                    className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm"
+                    placeholder="Paste your credit report text here..."
+                    value={creditReportText}
+                    onChange={(e) => setCreditReportText(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                
+                {/* Step 3: Analyze Button */}
+                <div className="pt-4">
+                  <button
+                    onClick={handleAnalyzeReport}
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all shadow-lg disabled:opacity-50"
+                  >
+                    <Sparkles size={24} className="mr-2" /> {isLoading ? 'Analyzing Your Report...' : 'Analyze My Credit Report'}
+                  </button>
+                  
+                  <p className="text-center text-sm text-gray-500 mt-3">
+                    Your report will be analyzed instantly using our advanced AI technology
+                  </p>
+                </div>
+                
+                {error && (
+                  <div className="mt-4 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg flex items-start">
+                    <AlertCircle size={20} className="mr-2 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Error</p>
+                      <p className="text-sm">{error}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-
-            {analysisResult && (
-              <div className="mt-6">
-                <h3 className="text-xl font-semibold text-blue-800 mb-3">Analysis Result:</h3>
-                <pre className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-sm border border-gray-200">
-                  {analysisResult}
-                </pre>
+            ) : (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-semibold text-blue-800">Your Credit Analysis</h3>
+                  <button
+                    onClick={() => {
+                      setAnalysisResult(null);
+                      setCreditReportText('');
+                      setFileName(null);
+                    }}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    Start New Analysis
+                  </button>
+                </div>
+                
+                <CreditAnalysisResult analysisResult={analysisResult} />
               </div>
             )}
           </div>
