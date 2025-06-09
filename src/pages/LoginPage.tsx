@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom'; 
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Loader2 } from 'lucide-react'; 
 import { useAuth } from '../context/AuthContext';
 
 
@@ -108,9 +109,9 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 rounded-lg text-white text-base font-semibold bg-blue-600 hover:bg-blue-800 focus:ring-blue-600 focus:border-blue-600 transition"
+              className="w-full flex items-center justify-center py-3 px-4 rounded-lg text-white text-base font-semibold bg-blue-600 hover:bg-blue-800 focus:ring-blue-600 focus:border-blue-600 transition"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in...</> : 'Sign in'}
             </button>
           </div>
         </form>

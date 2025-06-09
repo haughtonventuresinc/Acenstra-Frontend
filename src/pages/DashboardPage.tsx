@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Upload } from 'lucide-react';
 import { analyzeCreditReport } from '../services/authService'; // Import the analyzeCreditReport function
 import { AxiosError } from 'axios'; // Import AxiosError for specific error handling
 
@@ -10,15 +10,39 @@ const DashboardPage: React.FC = () => {
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const { user, token } = useAuth(); // Get token from useAuth
   const location = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const queryParams = new URLSearchParams(location.search);
   const currentSection = queryParams.get('section') || 'profile'; // Default to 'home'
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    setFileName(file.name);
+    setError(null);
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      setCreditReportText(content);
+    };
+    reader.onerror = () => {
+      setError('Failed to read the file. Please try again.');
+    };
+    reader.readAsText(file);
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleAnalyzeReport = async () => {
     if (!creditReportText.trim()) {
-      setError('Please paste your credit report text.');
+      setError('Please upload your credit report or paste the text.');
       return;
     }
     setIsLoading(true);
@@ -58,9 +82,35 @@ const DashboardPage: React.FC = () => {
         return (
           <div className="bg-white rounded-3xl shadow-xl p-8 mt-8 border border-blue-100">
             <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">Credit Report Analyzer</h2>
+            
+            {/* Hidden file input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              className="hidden"
+              accept=".txt,.pdf,.doc,.docx"
+            />
+            
+            {/* Upload button */}
+            <div className="mb-4">
+              <button
+                onClick={handleUploadClick}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-md disabled:opacity-50"
+              >
+                <Upload size={20} className="mr-2" /> Upload Credit Report
+              </button>
+              {fileName && (
+                <p className="mt-2 text-sm text-gray-600 text-center">
+                  Uploaded: {fileName}
+                </p>
+              )}
+            </div>
+            
             <textarea
               className="w-full h-40 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm"
-              placeholder="Paste your credit report text here..."
+              placeholder="Or paste your credit report text here..."
               value={creditReportText}
               onChange={(e) => setCreditReportText(e.target.value)}
               disabled={isLoading}
@@ -104,8 +154,16 @@ const DashboardPage: React.FC = () => {
         return (
           <div className="bg-white rounded-3xl shadow-xl p-8 mt-8 border border-blue-100">
             <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">My Applications</h2>
-            <p className="text-center text-gray-600">Application details and statuses will be displayed here.</p>
-            {/* You can list applications or provide links to application forms */}
+            <p className="text-center text-gray-600 mb-4">
+              This section displays all your funding and credit repair applications submitted through Acenstra.
+            </p>
+            <p className="text-center text-gray-600 mb-4">
+              You can track the status of each application, view approval details, and monitor progress.
+            </p>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-center text-blue-700 font-medium">No applications submitted yet.</p>
+              <p className="text-center text-blue-600 text-sm mt-2">Your application details and statuses will appear here once you submit your first application.</p>
+            </div>
           </div>
         );
       default: // This will now effectively be the 'profile' section if no query param is present

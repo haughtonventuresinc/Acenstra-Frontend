@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 // import { useAuth } from '../context/AuthContext'; // We might not use useAuth directly if registration doesn't auto-login
 
@@ -152,9 +153,9 @@ setError((err as ErrorWithResponse).response.data.error);
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 rounded-lg text-white text-base font-semibold bg-blue-600 hover:bg-blue-800 focus:ring-blue-600 focus:border-blue-600 transition"
+              className="w-full flex items-center justify-center py-3 px-4 rounded-lg text-white text-base font-semibold bg-blue-600 hover:bg-blue-800 focus:ring-blue-600 focus:border-blue-600 transition"
             >
-              {isLoading ? 'Registering...' : 'Register'}
+              {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Registering...</> : 'Register'}
             </button>
           </div>
         </form>
